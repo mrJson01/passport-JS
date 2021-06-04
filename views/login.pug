@@ -1,0 +1,12 @@
+html
+    head(lang="pl")
+        meta(charset="utf-8")
+    body
+        
+        h1=messages.error
+        form(action="/login" method="POST")
+            input(name="email" type="email")
+            input(name="password" type="password")
+            input(type="submit")
+            
+        a(href="/register")="Register"
