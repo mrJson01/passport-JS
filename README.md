@@ -14,3 +14,11 @@
 * passport-local <br/>
 * path (already installed) <br/>
 * bcrypt <br/>
+
+```javascript
+
+req.isAuthenticated();
+req.user.name;
+req.logOut()
+
+```
