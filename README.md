@@ -1,4 +1,4 @@
-# Passport JS 
+# Passport JS - Google authentication
 
 ## Used modules
 

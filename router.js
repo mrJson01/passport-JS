@@ -5,49 +5,38 @@ const passport = require('./PassPortJS.js');
 
 const Router = express.Router();
 
-const users = [];
+
+function ensureAuthenticated(req,res,next){
+    if(req.isAuthenticated()){ return next();}
+    res.redirect('/login');
+}
 
 
-Router.get('/home',(req,res)=>{
-    res.render('home');
+Router.get('/home',ensureAuthenticated,(req,res)=>{
+    res.render('home',{user:req.user});
 })
 
 //           LOGIN
-Router.get('/',(req,res)=>{
+Router.get('/login',(req,res)=>{
     res.render('login');
 });
 
 //          LOGIN-POST
 
-Router.post('/login',passport.authenticate('local',{
-    successRedirect:'/home',
-    failureRedirect:'/',
-    failureFlash:true
-}));
+Router.get('/auth/google',passport.authenticate('google',{scope:['profile']}));
 
-//          REGISTER
-Router.get('/register',(req,res)=>{
-    res.render('register');
+
+Router.get('/return',
+    passport.authenticate('google',{failureRedirect:'/login'}),
+    (req,res)=>{
+    res.redirect('/home');
 });
 
-//         REGISTER-POST
-Router.post('/register/send',async (req,res)=>{
-    
-    try{
-        
-        const hashPass = await bcrypt.hash(req.body.password,10);
-        users.push({
-            id:Date.now().toString(),
-            name:req.body.user,
-            email:req.body.email,
-            password:hashPass
-        });
-        console.log(users);
-        res.redirect('/');
-    }catch {
-        res.redirect('/register');
-    }
-    
+Router.get('/logout',(req,res)=>{
+    req.logOut();
+    res.redirect('/login');
 });
+
+
 
 module.exports = Router;
